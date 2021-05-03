@@ -6,7 +6,7 @@ from app.models.core import CoreModel
 
 
 class JWTMeta(CoreModel):
-    iss: str = "phresh.io"
+    iss: str = "fastapi_crud.io"
     aud: str = JWT_AUDIENCE
     iat: float = datetime.timestamp(datetime.utcnow())
     exp: float = datetime.timestamp(datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
