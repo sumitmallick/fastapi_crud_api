@@ -64,7 +64,7 @@ Scaling:
 For such moments or cases where we are getting increasing page hits and it looks like the app can not handle it as it's current configuration then
 if we are deploying it on any server we can deploy multiple instances of the app to spin up on multiple ips of same dns and add load balancer to be automatically scaled so that load balancer can distribute the requests' loads equally.
 
-How this works is: every ip or every instance of the app will work like a different machine and when any page request comes for the dns it will first go to
+How this works: every ip or every instance of the app will work like a different machine and when any page request comes for the dns it will first go to
 the load balancer and it will transfer the requests to the ips according to the load. 
 
 There are two types of load balancer, physical and application and here we can use physical one. For nginx we can use it's default load balancer or we can use services like elb(Elastic Load Balancing) of aws.
