@@ -32,13 +32,13 @@ async def list_all_user_cleanings(
     return await cleanings_repo.list_all_user_cleanings(requesting_user=current_user)
 
 
-@router.get("/{cleaning_id}/", response_model=IMDBPublic, name="imdb:get-cleaning-by-id")
+@router.get("/{imdb_id}/", response_model=IMDBPublic, name="imdb:get-cleaning-by-id")
 async def get_cleaning_by_id(cleaning: IMDB = Depends(get_imdb_by_id_from_path)) -> IMDBPublic:
     return cleaning
 
 
 @router.put(
-    "/{cleaning_id}/",
+    "/{imdb_id}/",
     response_model=IMDBPublic,
     name="imdb:update-cleaning-by-id",
     dependencies=[Depends(check_imdb_modification_permissions)],
@@ -52,7 +52,7 @@ async def update_cleaning_by_id(
 
 
 @router.delete(
-    "/{cleaning_id}/",
+    "/{imdb_id}/",
     response_model=int,
     name="imdb:delete-cleaning-by-id",
     dependencies=[Depends(check_imdb_modification_permissions)],
