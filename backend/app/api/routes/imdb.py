@@ -16,50 +16,50 @@ router = APIRouter()
 
 
 @router.post("/", response_model=IMDBPublic, name="imdb:create-imdb", status_code=status.HTTP_201_CREATED)
-async def create_new_cleaning(
-    new_cleaning: IMDBCreate = Body(..., embed=True),
+async def create_new_imdb(
+    new_imdb: IMDBCreate = Body(..., embed=True),
     current_user: UserInDB = Depends(get_current_active_user),
-    cleanings_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
+    imdb_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
 ) -> IMDBPublic:
-    return await cleanings_repo.create_cleaning(new_cleaning=new_cleaning, requesting_user=current_user)
+    return await imdb_repo.create_imdb(new_imdb=new_imdb, requesting_user=current_user)
 
 
 @router.get("/", response_model=List[IMDBPublic], name="imdb:list-all-user-imdb")
-async def list_all_user_cleanings(
+async def list_all_user_imdbs(
     current_user: UserInDB = Depends(get_current_active_user),
-    cleanings_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
+    imdb_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
 ) -> List[IMDBPublic]:
-    return await cleanings_repo.list_all_user_cleanings(requesting_user=current_user)
+    return await imdb_repo.list_all_user_imdbs(requesting_user=current_user)
 
 
-@router.get("/{imdb_id}/", response_model=IMDBPublic, name="imdb:get-cleaning-by-id")
-async def get_cleaning_by_id(cleaning: IMDB = Depends(get_imdb_by_id_from_path)) -> IMDBPublic:
-    return cleaning
+@router.get("/{imdb_id}/", response_model=IMDBPublic, name="imdb:get-imdb-by-id")
+async def get_imdb_by_id(imdb: IMDB = Depends(get_imdb_by_id_from_path)) -> IMDBPublic:
+    return imdb
 
 
 @router.put(
     "/{imdb_id}/",
     response_model=IMDBPublic,
-    name="imdb:update-cleaning-by-id",
+    name="imdb:update-imdb-by-id",
     dependencies=[Depends(check_imdb_modification_permissions)],
 )
-async def update_cleaning_by_id(
-    cleaning: IMDB = Depends(get_imdb_by_id_from_path),
-    cleaning_update: IMDBUpdate = Body(..., embed=True),
-    cleanings_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
+async def update_imdb_by_id(
+    imdb: IMDB = Depends(get_imdb_by_id_from_path),
+    imdb_update: IMDBUpdate = Body(..., embed=True),
+    imdb_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
 ) -> IMDBPublic:
-    return await cleanings_repo.update_cleaning(cleaning=cleaning, cleaning_update=cleaning_update)
+    return await imdb_repo.update_imdb(imdb=imdb, imdb_update=imdb_update)
 
 
 @router.delete(
     "/{imdb_id}/",
     response_model=int,
-    name="imdb:delete-cleaning-by-id",
+    name="imdb:delete-imdb-by-id",
     dependencies=[Depends(check_imdb_modification_permissions)],
 )
-async def delete_cleaning_by_id(
-    cleaning: IMDB = Depends(get_imdb_by_id_from_path),
-    cleanings_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
+async def delete_imdb_by_id(
+    imdb: IMDB = Depends(get_imdb_by_id_from_path),
+    imdb_repo: IMDBRepository = Depends(get_repository(IMDBRepository)),
 ) -> int:
-    return await cleanings_repo.delete_cleaning_by_id(cleaning=cleaning)
+    return await imdb_repo.delete_imdb_by_id(imdb=imdb)
 
