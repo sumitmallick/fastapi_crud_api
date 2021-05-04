@@ -11,7 +11,7 @@ Process to run the app:
         source env/bin/activate
     
     c. Install required packages:
-        pip3 insall -r requirements.txt
+        pip3 install -r requirements.txt
     
     d. Run the app with this command:
         uvicorn app.api.server:app --reload --workers 1 --host 0.0.0.0 --port 8000
