@@ -39,7 +39,11 @@ class IMDBCreate(IMDBBase):
 
 
 class IMDBUpdate(IMDBBase):
+    ninetynine_popularity: Optional[float]
+    movie_name: Optional[str]
+    director: Optional[str]
     imdb_score: Optional[float]
+    genre: Optional[GenreType]
 
 
 class IMDB(IDModelMixin, DateTimeModelMixin, IMDBBase):

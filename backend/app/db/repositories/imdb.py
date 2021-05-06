@@ -31,16 +31,16 @@ LIST_ALL_USER_IMDBS_QUERY = """
 
 UPDATE_IMDB_BY_ID_QUERY = """
     UPDATE imdb
-    SET movie_name         = :movie_name,
-        director  = :director,
-        imdb_score = :imdb_score,
-        genre = :genre,
-        ninetynine_popularity = :ninetynine_popularity
+    SET imdb_score = :imdb_score,
+        ninetynine_popularity = :ninetynine_popularity,
+        movie_name = :movie_name,
+        director = :director,
+        genre = :genre
     WHERE id = :id
     RETURNING id, ninetynine_popularity, movie_name, imdb_score, genre, director, created_by, created_at, updated_at;
 """
 
-UPDATE_IMDB_BY_ID_QUERY = """
+DELETE_IMDB_BY_ID_QUERY = """
     DELETE FROM imdb
     WHERE id = :id
     RETURNING id;
@@ -84,7 +84,7 @@ class IMDBRepository(BaseRepository):
 
     async def update_imdb(self, *, imdb: IMDB, imdb_update: IMDBUpdate) -> IMDB:
         imdb_update_params = imdb.copy(update=imdb_update.dict(exclude_unset=True))
-        if imdb_update_params.imdb_type is None:
+        if imdb_update_params.imdb_score is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid imdb type. Cannot be None."
             )
@@ -96,7 +96,7 @@ class IMDBRepository(BaseRepository):
         return IMDB(**updated_imdb)
 
     async def delete_imdb_by_id(self, *, imdb: IMDB) -> int:
-        return await self.db.execute(query=UPDATE_IMDB_BY_ID_QUERY, values={"id": imdb.id})
+        return await self.db.execute(query=DELETE_IMDB_BY_ID_QUERY, values={"id": imdb.id})
 
     async def populate_imdb(self, *, imdb: IMDB, requesting_user: UserInDB = None) -> IMDBPublic:
         return IMDBPublic(

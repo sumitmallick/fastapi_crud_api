@@ -34,7 +34,7 @@ def check_imdb_modification_permissions(
 
 
 def user_owns_imdb(*, user: UserInDB, imdb: IMDBPublic) -> bool:
-    if isinstance(imdb.owner, int):
-        return imdb.owner == user.id
+    if isinstance(imdb.created_by, int):
+        return imdb.created_by == user.id
 
-    return imdb.owner.id == user.id
+    return imdb.created_by.id == user.id
