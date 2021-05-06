@@ -1,10 +1,12 @@
 """create_main_tables
 
-Revision ID: fcf693f61018
-Revises:
-Create Date: 2021-01-16 17:12:20.667046
+Revision ID: 68ca24bc5f3e
+Revises: 
+Create Date: 2021-05-06 05:00:45.601032
 
 """
+
+
 from typing import Tuple
 from alembic import op
 import sqlalchemy as sa
@@ -194,6 +196,28 @@ def create_cleaner_evaluations_table() -> None:
     )
 
 
+def create_imdb_table() -> None:
+    op.create_table(
+        "imdb",
+        sa.Column("id", sa.Integer, primary_key=True),
+        sa.Column("movie_name", sa.Text, nullable=False, index=True),
+        sa.Column("director", sa.Text, nullable=True),
+        sa.Column("genre", sa.Text, nullable=False, server_default="action"),
+        sa.Column("ninetynine_popularity", sa.Numeric(10, 5), nullable=False),
+        sa.Column("imdb_score", sa.Numeric(10, 5), nullable=False),
+        sa.Column("created_by", sa.Integer, sa.ForeignKey("users.id", ondelete="CASCADE")),
+        *timestamps(indexed=True),
+    )
+    op.execute(
+        """
+        CREATE TRIGGER update_imdb_modtime
+            BEFORE UPDATE
+            ON imdb
+            FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+        """
+    )
+
 def upgrade() -> None:
     create_updated_at_trigger()
     create_users_table()
@@ -201,12 +225,14 @@ def upgrade() -> None:
     create_cleanings_table()
     create_offers_table()
     create_cleaner_evaluations_table()
+    create_imdb_table()
 
 
 def downgrade() -> None:
     op.drop_table("cleaning_to_cleaner_evaluations")
     op.drop_table("user_offers_for_cleanings")
     op.drop_table("cleanings")
+    op.drop_table("imdb")
     op.drop_table("profiles")
     op.drop_table("users")
     op.execute("DROP FUNCTION update_updated_at_column")
